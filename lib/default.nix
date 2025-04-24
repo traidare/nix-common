@@ -11,6 +11,14 @@ in {
         builtins.readDir dir
       );
 
+    versionGate = newPkg: stablePkg: let
+      newVersion = lib.getVersion newPkg;
+      stableVersion = lib.getVersion stablePkg;
+    in
+      if builtins.compareVersions newVersion stableVersion > 0
+      then newPkg
+      else lib.warn "Package ${lib.getName newPkg} reached version ${newVersion} at stable" stablePkg;
+
     fromYAML = e: let
       jsonOutputDrv = pkgs.runCommandLocal "from-yaml" {
         nativeBuildInputs = with pkgs; [yq-go];
