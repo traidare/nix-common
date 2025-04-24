@@ -27,9 +27,11 @@
     dev.enable = lib.mkDefault true;
     doc.enable = lib.mkForce false;
     info.enable = lib.mkForce false;
-    man.mandoc.enable = lib.mkDefault true;
-    man.man-db.enable = lib.mkDefault false;
     nixos.enable = lib.mkForce false;
+    man = {
+      mandoc.enable = lib.mkDefault true;
+      man-db.enable = lib.mkDefault false;
+    };
   };
 
   time.timeZone = lib.mkDefault "CET";
@@ -87,5 +89,8 @@
   # Use the latest Linux kernel release
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
 
-  programs.command-not-found.enable = false;
+  programs = {
+    less.envVariables.LESS = "-j10 -i -A -R";
+    command-not-found.enable = false;
+  };
 }
