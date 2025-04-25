@@ -2,8 +2,15 @@ system: let
   XDG_CACHE_HOME = "$HOME/.cache";
   XDG_CONFIG_HOME = "$HOME/.config";
   XDG_DATA_HOME = "$HOME/.local/share";
-  XDG_STATE_HOME = "$HOME/.local/state";
+  XDG_DESKTOP_DIR = "$HOME";
+  XDG_MUSIC_DIR = "$HOME/Music";
+  XDG_PICTURES_DIR = "$HOME/Downloads";
+  XDG_PUBLICSHARE_DIR = "$HOME";
   XDG_RUNTIME_DIR = "$XDG_RUNTIME_DIR";
+  XDG_SCREENSHOTS_DIR = "$HOME/Screenshots";
+  XDG_STATE_HOME = "$HOME/.local/state";
+  XDG_TEMPLATES_DIR = "$HOME";
+  XDG_VIDEOS_DIR = "$HOME/Downloads";
 in {
   env = {
     PYTHONSTARTUP =
@@ -58,10 +65,17 @@ in {
 
   xdg_env = {
     inherit
-      XDG_DATA_HOME
-      XDG_CONFIG_HOME
       XDG_CACHE_HOME
+      XDG_CONFIG_HOME
+      XDG_DATA_HOME
+      XDG_DESKTOP_DIR
+      XDG_MUSIC_DIR
+      XDG_PICTURES_DIR
+      XDG_PUBLICSHARE_DIR
+      XDG_SCREENSHOTS_DIR
       XDG_STATE_HOME
+      XDG_TEMPLATES_DIR
+      XDG_VIDEOS_DIR
       ;
   };
 }
