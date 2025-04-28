@@ -6,6 +6,7 @@
 }: {
   imports = [
     ./fhs.nix
+    ./nix-conf.nix
     ./xdg
   ];
 
