@@ -17,7 +17,7 @@ in {
     in
       if builtins.compareVersions newVersion stableVersion > 0
       then newPkg
-      else lib.warn "Package ${lib.getName newPkg} reached version >=${newVersion} at stable - stable will now be used" stablePkg;
+      else lib.warn "Package ${lib.getName newPkg} reached version >=${newVersion} on stable - stable will now be used" stablePkg;
 
     fromYAML = e: let
       jsonOutputDrv = pkgs.runCommandLocal "from-yaml" {
