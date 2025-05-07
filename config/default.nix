@@ -1,28 +1,15 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: {
   imports = [
     ./fhs.nix
     ./nix-conf.nix
-    ./xdg
+    ./packages.nix
+    ./shell.nix
+    ./vars
   ];
-
-  environment = {
-    defaultPackages = [];
-
-    sessionVariables = {
-      GOPROXY = lib.mkDefault "direct";
-    };
-
-    shellAliases = {
-      ls = lib.mkForce "ls -F --sort=extension";
-      ll = lib.mkForce "ls -lh";
-      l = lib.mkForce "ls -lhA";
-    };
-  };
 
   documentation = {
     dev.enable = lib.mkDefault true;
@@ -87,11 +74,5 @@
     };
   };
 
-  # Use the latest Linux kernel release
-  boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
-
-  programs = {
-    less.envVariables.LESS = "-j10 -i -A -R";
-    command-not-found.enable = false;
-  };
+  programs.less.envVariables.LESS = "-j10 -i -A -R";
 }

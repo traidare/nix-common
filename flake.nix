@@ -17,7 +17,7 @@
         ];
 
         flake.flakeModules.default = ./lib;
-        flake.nixosModules = config.flake.lib.dirToAttrs ./modules/nixos;
+        flake.nixosModules = config.flake.lib.dirToAttrs ./config;
       }
     );
 
