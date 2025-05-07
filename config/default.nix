@@ -7,6 +7,7 @@
     ./fhs.nix
     ./nix-conf.nix
     ./packages.nix
+    ./restrict-path.nix
     ./shell.nix
     ./vars
   ];
@@ -26,7 +27,6 @@
 
   security.sudo = {
     extraConfig = ''
-      Defaults secure_path = /run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin
       Defaults timestamp_timeout=30
       Defaults lecture=never
       Defaults passprompt="[31m SUDO: password for %p@%h, running as %U:[0m "
