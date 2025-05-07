@@ -11,10 +11,7 @@
           ./packages
         ];
 
-        systems = [
-          "x86_64-linux"
-          "aarch64-linux"
-        ];
+        systems = ["x86_64-linux"];
 
         flake.flakeModules.default = ./lib;
         flake.nixosModules = config.flake.lib.dirToAttrs ./config;
