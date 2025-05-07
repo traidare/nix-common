@@ -12,7 +12,7 @@ system: let
   XDG_TEMPLATES_DIR = "$HOME";
   XDG_VIDEOS_DIR = "$HOME/Downloads";
 in {
-  env = {
+  apps = {
     PYTHONSTARTUP =
       if system == "nixos"
       then "/etc/pythonrc"
@@ -63,7 +63,7 @@ in {
     XCOMPOSEFILE = "/etc/X11/XCompose";
   };
 
-  xdg_env = {
+  xdg = {
     inherit
       XDG_CACHE_HOME
       XDG_CONFIG_HOME

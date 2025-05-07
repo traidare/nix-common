@@ -25,15 +25,15 @@ flake @ {
             callPackage = lib.callPackageWith (pkgs // self');
             #callPackage = lib.callPackageWith <| pkgs // self';
 
-            auto = lib.pipe (builtins.readDir ./.) [
+            auto = lib.pipe (builtins.readDir ./packages) [
               (lib.filterAttrs (name: value: value == "directory"))
-              (builtins.mapAttrs (name: _: callPackage ./${name} {}))
+              (builtins.mapAttrs (name: _: callPackage ./packages/${name} {}))
             ];
           in
             auto
             // {
               # preventing infrec
-              #sioyek-fhs = callPackage ./yazi {inherit (pkgs) sioyek qt6 installShellFiles;};
+              #sioyek-fhs = callPackage ./packages/yazi {inherit (pkgs) sioyek qt6 installShellFiles;};
             }
         );
       in
@@ -43,10 +43,10 @@ flake @ {
       #    stage1
       #    // (inputs.wrapper-manager.lib {
       #      pkgs = pkgs // stage1;
-      #      modules = lib.pipe (builtins.readDir ../modules/wrapper-manager) [
+      #      modules = lib.pipe (builtins.readDir ./wrapper-manager) [
       #        (lib.filterAttrs (name: value: value == "directory"))
       #        builtins.attrNames
-      #        (map (n: ../modules/wrapper-manager/${n}))
+      #        (map (n: ./wrapper-manager/${n}))
       #      ];
       #      specialArgs = {
       #        inherit inputs';
