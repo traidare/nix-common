@@ -7,7 +7,7 @@ system: let
   XDG_PICTURES_DIR = "$HOME/Downloads";
   XDG_PUBLICSHARE_DIR = "$HOME";
   XDG_RUNTIME_DIR = "$XDG_RUNTIME_DIR";
-  XDG_SCREENSHOTS_DIR = "$HOME/Screenshots";
+  XDG_SCREENSHOTS_DIR = "$HOME/screenshots";
   XDG_STATE_HOME = "$HOME/.local/state";
   XDG_TEMPLATES_DIR = "$HOME";
   XDG_VIDEOS_DIR = "$HOME/Downloads";
