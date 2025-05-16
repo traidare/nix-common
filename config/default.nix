@@ -4,12 +4,12 @@
   ...
 }: {
   imports = [
+    ./common-vars
     ./fhs.nix
     ./nix-conf.nix
     ./packages.nix
     ./restrict-path.nix
     ./shell.nix
-    ./vars
   ];
 
   documentation = {

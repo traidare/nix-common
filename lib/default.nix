@@ -17,7 +17,7 @@ in {
     in
       if builtins.compareVersions newVersion stableVersion > 0
       then newPkg
-      else lib.warn "Package ${lib.getName newPkg} reached version >=${newVersion} on stable - stable will now be used" stablePkg;
+      else lib.warn "Package ${lib.getName newPkg} reached version >=${newVersion} on stable - stable is now used" stablePkg;
     # TODO: create 'versionGate' function for just notifying - not switching to stable
 
     fromYAML = e: let
