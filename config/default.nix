@@ -29,7 +29,7 @@
     extraConfig = ''
       Defaults timestamp_timeout=30
       Defaults lecture=never
-      Defaults passprompt="[31m SUDO: password for %p@%h, running as %U:[0m "
+      Defaults passprompt="[31m Sudo: Password for '%p@%h', running as '%U:[0m' "
     '';
   };
 
@@ -60,10 +60,8 @@
   #  LC_TIME = "C.UTF-8";
   #};
 
-  networking = {
-    hostName = lib.mkDefault "host";
-    # "b08dfa6083e7567a1921a715000001fb"; # Whonix ID # TODO
-  };
+  networking.hostName = lib.mkDefault "host";
+  environment.etc."machine-id".text = "b08dfa6083e7567a1921a715000001fb"; # Whonix ID
 
   boot.loader = {
     timeout = lib.mkDefault 1;
