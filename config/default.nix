@@ -6,6 +6,7 @@
   imports = [
     ./common-vars
     ./fhs.nix
+    ./networkmanager.nix
     ./nix-conf.nix
     ./packages.nix
     ./restrict-path.nix
