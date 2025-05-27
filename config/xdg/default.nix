@@ -1,18 +1,10 @@
-{
-  config,
-  lib,
-  ...
-}: let
-  xdgVars = import ./xdg.nix "nixos";
+{config, ...}: let
+  varsXDG = import ./vars-xdg.nix "nixos";
+  varsDNT = import ./vars-donottrack.nix;
+
   env = config.environment.sessionVariables;
 in {
-  environment.sessionVariables =
-    xdgVars.apps
-    // xdgVars.xdg
-    // {
-      # Privacy
-      GOPROXY = lib.mkDefault "direct";
-    };
+  environment.sessionVariables = varsXDG.xdg // varsXDG.apps // varsDNT;
 
   environment.etc = {
     npmrc.text = ''
@@ -22,6 +14,6 @@ in {
       logs-dir=${env.XDG_STATE_HOME}/npm/logs
     '';
 
-    pythonrc.text = builtins.readFile ./files/pythonrc;
+    pythonrc.text = builtins.readFile ./files/pythonrc.py;
   };
 }

@@ -33,8 +33,7 @@
   };
 
   environment.systemPackages = with pkgs;
-    lib.optionals (config.networking.networkmanager.enable
-      && config.networking.networkmanager.dns == "dnsmasq") [
+    lib.optionals (config.networking.networkmanager.enable && config.networking.networkmanager.dns == "dnsmasq") [
       dnsmasq
     ];
 }
