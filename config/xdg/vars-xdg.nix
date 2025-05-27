@@ -6,7 +6,6 @@ system: let
   XDG_MUSIC_DIR = "$HOME/Music";
   XDG_PICTURES_DIR = "$HOME/Downloads";
   XDG_PUBLICSHARE_DIR = "$HOME";
-  XDG_RUNTIME_DIR = "$XDG_RUNTIME_DIR";
   XDG_SCREENSHOTS_DIR = "$HOME/screenshots";
   XDG_STATE_HOME = "$HOME/.local/state";
   XDG_TEMPLATES_DIR = "$HOME";
@@ -46,7 +45,6 @@ in {
     LYNX_LSS = "${XDG_CONFIG_HOME}/lynx/lynx.lss";
     NODE_REPL_HISTORY = "${XDG_DATA_HOME}/node_repl_history";
     NPM_CONFIG_CACHE = "${XDG_CACHE_HOME}/npm";
-    NPM_CONFIG_TMP = "${XDG_RUNTIME_DIR}/npm";
     NPM_CONFIG_USERCONFIG = "${XDG_CONFIG_HOME}/npm/npmrc";
     NUGET_PACKAGES = "${XDG_CACHE_HOME}/NuGetPackages";
     PLATFORMIO_CORE_DIR = "${XDG_DATA_HOME}/platformio";
