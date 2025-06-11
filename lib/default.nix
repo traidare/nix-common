@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   lib,
   ...
@@ -20,17 +21,8 @@ in {
       else lib.warn "Package ${lib.getName newPkg} reached version >=${newVersion} on stable - stable is now used" stablePkg;
     # TODO: create 'versionGate' function for just notifying - not switching to stable
 
-    fromYAML = e: let
-      jsonOutputDrv = pkgs.runCommandLocal "from-yaml" {
-        nativeBuildInputs = with pkgs; [yq-go];
-      } "yq -o json - <<<'${e}' > $out";
-    in
-      builtins.fromJSON (builtins.readFile jsonOutputDrv);
-
-    mkGraphicalService = lib.recursiveUpdate {
-      partOf = ["graphical-session.target"];
-      after = ["graphical-session.target"];
-      wantedBy = ["graphical-session.target"];
-    };
+    fromYAML = pkgs.callPackage ./from-yaml.nix {};
   };
+
+  flake.flakeModules.default.lib = config.flake.lib;
 }
