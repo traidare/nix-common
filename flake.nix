@@ -2,8 +2,8 @@
   outputs = inputs:
     inputs.flake-parts.lib.mkFlake {inherit inputs;} (
       {
-        lib,
         config,
+        lib,
         ...
       }: {
         imports = [
@@ -13,7 +13,6 @@
 
         systems = ["x86_64-linux"];
 
-        flake.flakeModules.default = ./lib;
         flake.nixosModules = config.flake.lib.dirToAttrs ./config;
       }
     );
