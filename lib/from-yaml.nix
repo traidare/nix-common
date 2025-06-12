@@ -2,8 +2,7 @@
   runCommandLocal,
   yq-go,
 }:
-# fromYaml ::
-#   -- | The name to use in the output derivation. Helpful for debugging.
+# fromYAML ::
 #   Path -> a
 #   -- | The nixified version of the input YAML file.
 path: let

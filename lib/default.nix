@@ -21,7 +21,9 @@ in {
       else lib.warn "Package ${lib.getName newPkg} reached version >=${newVersion} on stable - stable is now used" stablePkg;
     # TODO: create 'versionGate' function for just notifying - not switching to stable
 
+    # FIXME
     fromYAML = pkgs.callPackage ./from-yaml.nix {};
+    toYAML = pkgs.callPackage ./to-yaml.nix {};
   };
 
   flake.flakeModules.default.lib = config.flake.lib;
