@@ -2,11 +2,10 @@
   config,
   inputs,
   lib,
+  withSystem,
   ...
-}: let
-  pkgs = inputs.nixpkgs.legacyPackages.${builtins.currentSystem};
-in {
-  flake.lib = {
+}: {
+  flake.lib = withSystem "x86_64-linux" ({pkgs, ...}: {
     dirToAttrs = dir:
       lib.mapAttrs' (name: value: lib.nameValuePair (lib.removeSuffix ".nix" name) (dir + "/${name}")) (
         builtins.readDir dir
@@ -21,10 +20,9 @@ in {
       else lib.warn "Package ${lib.getName newPkg} reached version >=${newVersion} on stable - stable is now used" stablePkg;
     # TODO: create 'versionGate' function for just notifying - not switching to stable
 
-    # FIXME
     fromYAML = pkgs.callPackage ./from-yaml.nix {};
     toYAML = pkgs.callPackage ./to-yaml.nix {};
-  };
+  });
 
   flake.flakeModules.default.lib = config.flake.lib;
 }

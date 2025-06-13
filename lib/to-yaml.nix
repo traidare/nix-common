@@ -16,4 +16,4 @@ value: let
       yq -P -o=yaml "$valuePath" > "$out"
     '';
 in
-  yamlOut
+  builtins.readFile yamlOut
