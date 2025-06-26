@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   withSystem,
   ...
@@ -22,6 +21,13 @@
 
     fromYAML = pkgs.callPackage ./from-yaml.nix {};
     toYAML = pkgs.callPackage ./to-yaml.nix {};
+
+    mkNullOption = type: description:
+      lib.mkOption {
+        type = lib.types.nullOr type;
+        default = null;
+        inherit description;
+      };
   });
 
   flake.flakeModules.default.lib = config.flake.lib;
