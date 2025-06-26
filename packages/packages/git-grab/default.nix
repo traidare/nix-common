@@ -26,7 +26,6 @@ rustPlatform.buildRustPackage rec {
     description = "A tool to clone git repositories to a standard location organised by domain and path";
     homepage = "https://github.com/wezm/git-grab";
     license = with licenses; [mit asl20];
-    maintainers = [traidare];
     mainProgram = "git-grab";
     platforms = platforms.unix;
   };
