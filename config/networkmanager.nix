@@ -19,9 +19,7 @@
     ethernet.macAddress = lib.mkDefault "stable";
 
     settings = {
-      main = {
-        dns = lib.mkDefault "dnsmasq";
-      };
+      main.dns = lib.mkDefault "dnsmasq";
 
       "dnsmasq" = {
         #"conf-file" = "/usr/share/dnsmasq/trust-anchors.conf";
@@ -32,8 +30,5 @@
     };
   };
 
-  environment.systemPackages = with pkgs;
-    lib.optionals (config.networking.networkmanager.enable && config.networking.networkmanager.dns == "dnsmasq") [
-      dnsmasq
-    ];
+  environment.systemPackages = lib.optionals (config.networking.networkmanager.enable && config.networking.networkmanager.dns == "dnsmasq") [pkgs.dnsmasq];
 }

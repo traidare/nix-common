@@ -4,7 +4,6 @@
   ...
 }: {
   imports = [
-    ./fhs.nix
     ./networkmanager.nix
     ./nix-conf.nix
     ./packages.nix
