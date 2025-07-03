@@ -47,7 +47,6 @@
       lidSwitch = lib.mkDefault "ignore";
     };
 
-    displayManager.gdm.enable = lib.mkForce false;
     xserver.displayManager.lightdm.enable = lib.mkForce false;
 
     chrony.enable = lib.mkDefault true;
