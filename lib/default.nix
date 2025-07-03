@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   withSystem,
   ...
@@ -28,6 +27,4 @@
         inherit description;
       };
   });
-
-  flake.flakeModules.default.lib = config.flake.lib;
 }

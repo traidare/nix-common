@@ -9,6 +9,9 @@
 
         systems = ["x86_64-linux"];
         flake.nixosModules = config.flake.lib.dirToAttrs ./config;
+        flake.flakeModules =
+          (config.flake.lib.dirToAttrs ./flake-modules)
+          // {default.lib = config.flake.lib;};
       }
     );
 
@@ -27,6 +30,13 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
+      };
+    };
+    colmena = {
+      url = "github:zhaofengli/colmena";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        stable.follows = "nixpkgs";
       };
     };
   };
