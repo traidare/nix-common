@@ -1,8 +1,7 @@
-flake @ {
+{
   config,
   inputs,
   lib,
-  withSystem,
   ...
 }: {
   perSystem = {
@@ -30,14 +29,14 @@ flake @ {
             pkgs = basePkgs;
             callPackage = lib.callPackageWith (pkgs // self');
 
-            auto = lib.pipe (builtins.readDir ./packages) [
+            auto = lib.pipe (builtins.readDir ./pkgs) [
               (lib.filterAttrs (name: value: value == "directory"))
-              (builtins.mapAttrs (name: _: callPackage ./packages/${name} {}))
+              (builtins.mapAttrs (name: _: callPackage ./pkgs/${name} {}))
             ];
           in
             auto
             // {
-              nixos-deploy = callPackage ./packages/nixos-deploy {inherit inputs';};
+              nixos-deploy = callPackage ./pkgs/nixos-deploy {inherit inputs';};
             }
         );
       in
@@ -49,9 +48,4 @@ flake @ {
     _module.args.pkgs = finalPkgs;
     inherit packages;
   };
-
-  flake.overlays.default = final: prev:
-    withSystem prev.stdenv.hostPlatform.system (
-      {config, ...}: config.packages
-    );
 }

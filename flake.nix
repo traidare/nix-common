@@ -1,17 +1,19 @@
 {
   outputs = inputs:
     inputs.flake-parts.lib.mkFlake {inherit inputs;} (
-      {config, ...}: {
+      {
+        config,
+        lib,
+        ...
+      }: {
+        systems = lib.platforms.all;
         imports = [
           ./lib
           ./packages
         ];
 
-        systems = ["x86_64-linux"];
         flake.nixosModules = config.flake.lib.dirToAttrs ./config;
-        flake.flakeModules =
-          (config.flake.lib.dirToAttrs ./flake-modules)
-          // {default.lib = config.flake.lib;};
+        flake.flakeModules = config.flake.lib.dirToAttrs ./flake-modules;
       }
     );
 
