@@ -1,51 +1,39 @@
 {
   config,
   inputs,
-  lib,
   ...
 }: {
+  flake.overlays.pkgs-lib = import ./pkgs-lib;
+
   perSystem = {
     inputs',
     system,
     ...
   }: let
-    basePkgs = import inputs.nixpkgs {
+    pkgs = import inputs.nixpkgs {
       inherit system;
       overlays = [
         (final: prev: {
+          p = prev.p or {} // (config.flake.overlays.pkgs-lib final prev);
           lib = prev.lib.extend (
-            final: prev: {
-              p = config.flake.lib;
-            }
+            final: prev: {p = config.flake.lib;}
           );
         })
       ];
     };
-
-    packages = lib.fix (
-      self: let
-        stage1 = lib.fix (
-          self': let
-            pkgs = basePkgs;
-            callPackage = lib.callPackageWith (pkgs // self');
-
-            auto = lib.pipe (builtins.readDir ./pkgs) [
-              (lib.filterAttrs (name: value: value == "directory"))
-              (builtins.mapAttrs (name: _: callPackage ./pkgs/${name} {}))
-            ];
-          in
-            auto
-            // {
-              nixos-deploy = callPackage ./pkgs/nixos-deploy {inherit inputs';};
-            }
-        );
-      in
-        stage1
-    );
-
-    finalPkgs = basePkgs.extend (final: prev: packages);
   in {
-    _module.args.pkgs = finalPkgs;
-    inherit packages;
+    stagedPackages = {
+      inherit pkgs;
+      stages = [
+        {
+          packages = {
+            nixos-deploy = {
+              path = ./pkgs/nixos-deploy;
+              args = {inherit inputs';};
+            };
+          };
+        }
+      ];
+    };
   };
 }
