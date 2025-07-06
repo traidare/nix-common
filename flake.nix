@@ -8,6 +8,7 @@
       }: {
         systems = lib.platforms.all;
         imports = [
+          ./flake-modules/staged-packages.nix
           ./lib
           ./packages
         ];
