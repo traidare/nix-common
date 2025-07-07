@@ -26,6 +26,9 @@
       inherit pkgs;
       stages = [
         {
+          inputPackages = with inputs'; [[colmena "colmena"]];
+        }
+        {
           packages = {
             nixos-deploy = {
               path = ./pkgs/nixos-deploy;
