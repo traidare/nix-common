@@ -72,4 +72,9 @@
   };
 
   programs.less.envVariables.LESS = "-j10 -i -A -R";
+
+  environment.sessionVariables = {
+    EDITOR = lib.mkDefault "nvim";
+    VISUAL = lib.mkDefault "nvim";
+  };
 }
