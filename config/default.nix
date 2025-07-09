@@ -64,7 +64,10 @@
 
   boot.loader = {
     timeout = lib.mkDefault 1;
-    grub.enable = lib.mkDefault false;
+    grub = {
+      enable = lib.mkDefault false;
+      configurationLimit = lib.mkDefault 50;
+    };
     systemd-boot = {
       editor = lib.mkDefault false;
       configurationLimit = lib.mkDefault 50;
