@@ -16,6 +16,7 @@ writeShellApplication {
     TARGET_USER="nixos"
     HOST=""
     TARGET_IP=""
+    SOPS_CONFIG="''${SOPS_CONFIG:-}"
 
     while [ $# -gt 0 ]; do
       case $1 in
@@ -43,9 +44,17 @@ writeShellApplication {
           TARGET_IP="$2"
           shift 2
           ;;
+        --sops-config=*)
+          SOPS_CONFIG="''${1#*=}"
+          shift
+          ;;
+        --sops-config)
+          SOPS_CONFIG="$2"
+          shift 2
+          ;;
         *)
           echo "Unknown option: $1"
-          echo "Usage: $0 --host=HOST [--target-user=TARGET_USER] --target-ip=TARGET_IP"
+          echo "Usage: $0 --host=HOST [--target-user=TARGET_USER] --target-ip=TARGET_IP --sops-config=SOPS_CONFIG"
           exit 1
           ;;
       esac
@@ -63,6 +72,10 @@ writeShellApplication {
       echo "Error: --target-user is required"
       exit 1
     fi
+    if [ -z "$SOPS_CONFIG" ]; then
+      echo "Error: --sops-config is required (or SOPS_CONFIG environment variable)"
+      exit 1
+    fi
 
     temp=$(mktemp -d)
 
@@ -76,7 +89,7 @@ writeShellApplication {
     age-keygen -o "$temp/var/lib/sops-nix/key.txt"
     publicKey=$(age-keygen -y "$temp/var/lib/sops-nix/key.txt")
 
-    nix-config-helper prepare-install --config=/home/user/Projects/nix/nixos/.sops.yaml --host=pav --public-key="$publicKey"
+    nix-config-helper prepare-install --config="$SOPS_CONFIG" --host="$HOST" --public-key="$publicKey"
 
     chmod 600 "$temp/var/lib/sops-nix/key.txt"
 
