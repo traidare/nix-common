@@ -1,5 +1,6 @@
 {lib, ...}: {
   nix = {
+    channel.enable = false;
     settings = {
       experimental-features = [
         "nix-command"
@@ -8,11 +9,13 @@
       ];
       use-xdg-base-directories = lib.mkDefault true;
     };
-
-    gc = {
-      automatic = lib.mkDefault true;
+  };
+  programs.nh = {
+    enable = true;
+    clean = {
+      enable = lib.mkDefault true;
       dates = lib.mkDefault "weekly";
-      options = lib.mkDefault "--delete-older-than 45d";
+      extraArgs = lib.mkDefault "--keep 5 --keep-since 7d";
     };
   };
 }
