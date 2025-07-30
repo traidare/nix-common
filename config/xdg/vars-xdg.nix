@@ -55,7 +55,6 @@ in {
     TEXMFCONFIG = "${XDG_CONFIG_HOME}/texlive/texmf-config";
     TEXMFHOME = "${XDG_DATA_HOME}/texlive/texmf";
     TEXMFVAR = "${XDG_CACHE_HOME}/texlive/texmf-var";
-    WGETRC = "${XDG_CONFIG_HOME}/wgetrc";
     WINEPREFIX = "${XDG_DATA_HOME}/wine";
     XCOMPOSECACHE = "${XDG_CACHE_HOME}/X11/xcompose";
     XCOMPOSEFILE = "/etc/X11/XCompose";
