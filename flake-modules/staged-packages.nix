@@ -45,13 +45,24 @@
 
   handleInputPackages = inputList:
     lib.foldl' (
-      acc: item:
-        acc
-        // (
+      acc: item: let
+        packages =
           if lib.isList item
           then lib.getAttrs (lib.tail item) ((lib.head item).packages)
-          else item.packages
-        )
+          else item.packages;
+
+        processedPackages =
+          builtins.mapAttrs (
+            name: pkg:
+              if name == "default" && lib.isDerivation pkg && pkg ? pname
+              then lib.nameValuePair pkg.pname pkg
+              else if name == "default" && lib.isDerivation pkg && pkg ? name
+              then lib.nameValuePair pkg.name pkg
+              else lib.nameValuePair name pkg
+          )
+          packages;
+      in
+        acc // (builtins.listToAttrs (builtins.attrValues processedPackages))
     ) {}
     inputList;
 
