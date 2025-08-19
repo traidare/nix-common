@@ -1,12 +1,8 @@
 {
   outputs = inputs:
     inputs.flake-parts.lib.mkFlake {inherit inputs;} (
-      {
-        config,
-        lib,
-        ...
-      }: {
-        systems = lib.platforms.all;
+      {config, ...}: {
+        systems = ["x86_64-linux" "aarch64-linux"];
         imports = [
           ./flake-modules/staged-packages.nix
           ./lib

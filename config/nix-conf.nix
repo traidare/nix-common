@@ -8,6 +8,7 @@
         "pipe-operators"
       ];
       use-xdg-base-directories = lib.mkDefault true;
+      allowed-users = lib.mkDefault ["@wheel" "root"];
     };
   };
   programs.nh = {

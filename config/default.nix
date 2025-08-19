@@ -18,12 +18,12 @@
     info.enable = lib.mkForce false;
     nixos.enable = lib.mkForce false;
     man = {
-      mandoc.enable = lib.mkDefault true;
-      man-db.enable = lib.mkDefault false;
+      mandoc.enable = config.documentation.man.enable;
+      man-db.enable = lib.mkForce false;
     };
   };
 
-  time.timeZone = lib.mkDefault "CET";
+  time.timeZone = lib.mkOverride 999 "CET";
 
   security.sudo = {
     extraConfig = ''
@@ -52,6 +52,10 @@
     chrony.enable = lib.mkDefault true;
 
     dbus.implementation = lib.mkDefault "broker";
+
+    userborn.enable = lib.mkDefault true;
+
+    openssh.settings.PasswordAuthentication = false;
   };
 
   # TODO
@@ -66,15 +70,21 @@
     timeout = lib.mkDefault 1;
     grub = {
       enable = lib.mkDefault false;
-      configurationLimit = lib.mkDefault 50;
+      configurationLimit = lib.mkOverride 1001 15;
     };
     systemd-boot = {
       editor = lib.mkDefault false;
-      configurationLimit = lib.mkDefault 50;
+      configurationLimit = lib.mkOverride 1001 15;
     };
   };
 
-  programs.less.envVariables.LESS = "-j10 -i -A -R";
+  programs = {
+    less.envVariables.LESS = "-j10 -i -A -R";
+    vim = {
+      enable = lib.mkForce false;
+      defaultEditor = lib.mkForce false;
+    };
+  };
 
   environment.sessionVariables = {
     EDITOR = lib.mkDefault "nvim";
