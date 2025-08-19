@@ -22,7 +22,6 @@ in {
     ANDROID_HOME = "${XDG_DATA_HOME}/android";
     ANDROID_USER_HOME = "${XDG_DATA_HOME}/android";
     CABAL_DIR = "${XDG_DATA_HOME}/cabal";
-    CARGO_HOME = "$(mktemp -d)";
     CUDA_CACHE_PATH = "${XDG_CACHE_HOME}/nv";
     DOCKER_CONFIG = "${XDG_CONFIG_HOME}/docker";
     ERRFILE = "${XDG_CACHE_HOME}/X11/xsession-errors";
@@ -35,7 +34,6 @@ in {
     HISTFILE = "${XDG_DATA_HOME}/bash/history";
     INPUTRC = "${XDG_CONFIG_HOME}/inputrc";
     IPYTHONDIR = "${XDG_CONFIG_HOME}/ipython";
-    JULIA_DEPOT_PATH = "${XDG_DATA_HOME}/julia:$JULIA_DEPOT_PATH";
     JUPYTER_CONFIG_DIR = "${XDG_CONFIG_HOME}/jupyter";
     KDEHOME = "${XDG_CONFIG_HOME}/kde";
     KERAS_HOME = "${XDG_STATE_HOME}/keras";
