@@ -9,6 +9,7 @@
     ./packages.nix
     ./restrict-path.nix
     ./shell.nix
+    ./sudo.nix
     ./xdg
   ];
 
@@ -24,14 +25,6 @@
   };
 
   time.timeZone = lib.mkOverride 999 "CET";
-
-  security.sudo = {
-    extraConfig = ''
-      Defaults timestamp_timeout=30
-      Defaults lecture=never
-      Defaults passprompt="[31m Sudo: Password for '%p@%h', running as '%U:[0m' "
-    '';
-  };
 
   security.rtkit.enable = config.services.pipewire.enable;
   services = {
@@ -62,6 +55,8 @@
   #i18n.extraLocaleSettings = {
   #  LC_TIME = "C.UTF-8";
   #};
+
+  networking.usePredictableInterfaceNames = lib.mkDefault false;
 
   networking.hostName = lib.mkDefault "host";
   environment.etc."machine-id".text = "b08dfa6083e7567a1921a715000001fb"; # Whonix ID
