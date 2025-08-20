@@ -3,10 +3,6 @@
   pkgs,
   ...
 }: {
-  security.sudo.extraConfig = lib.mkBefore ''
-    Defaults secure_path = /run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin
-  '';
-
   # Remove user directories from PATH environment variable
   environment.loginShellInit = let
     cleanPath = pkgs.writers.writeNu "clean_path.nu" ''
