@@ -9,8 +9,9 @@
           ./packages
         ];
 
-        flake.nixosModules = config.flake.lib.dirToAttrs ./config;
-        flake.flakeModules = config.flake.lib.dirToAttrs ./flake-modules;
+        flake.flakeModules = config.flake.lib.dirToAttrsWithDefault ./flake-modules;
+        flake.nixosConfig = config.flake.lib.dirToAttrsWithDefault ./config;
+        flake.nixosModules = config.flake.lib.dirToAttrsWithDefault ./nixos-modules;
       }
     );
 
@@ -27,8 +28,9 @@
     nix-config-helper = {
       url = "git+https://codeberg.org/traidare/nix-config-helper.git";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
+        gomod2nix.follows = "gomod2nix";
+        nixpkgs.follows = "nixpkgs";
       };
     };
     colmena = {
@@ -37,6 +39,14 @@
         nixpkgs.follows = "nixpkgs";
         stable.follows = "nixpkgs";
       };
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    gomod2nix = {
+      url = "github:nix-community/gomod2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 }

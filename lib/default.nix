@@ -1,11 +1,17 @@
 {inputs, ...}: let
   lib = inputs.nixpkgs.lib;
 in {
-  flake.lib = {
+  flake.lib = rec {
     dirToAttrs = dir:
       lib.mapAttrs' (name: value: lib.nameValuePair (lib.removeSuffix ".nix" name) (dir + "/${name}")) (
         builtins.readDir dir
       );
+
+    dirToAttrsWithDefault = dir: let
+      modules = dirToAttrs dir;
+      default = {imports = builtins.attrValues (builtins.removeAttrs modules ["default"]);};
+    in
+      modules // {inherit default;};
 
     versionGate = newPkg: stablePkg: let
       newVersion = lib.getVersion newPkg;

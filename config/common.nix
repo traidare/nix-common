@@ -3,16 +3,6 @@
   lib,
   ...
 }: {
-  imports = [
-    ./networkmanager.nix
-    ./nix-conf.nix
-    ./packages.nix
-    ./restrict-path.nix
-    ./shell.nix
-    ./sudo.nix
-    ./xdg
-  ];
-
   documentation = {
     dev.enable = lib.mkDefault true;
     doc.enable = lib.mkForce false;
