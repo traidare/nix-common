@@ -17,7 +17,11 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    flake-compat.url = "github:edolstra/flake-compat";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-utils.url = "github:numtide/flake-utils";
+
     nixos-anywhere = {
       url = "github:nix-community/nixos-anywhere";
       inputs = {
@@ -36,6 +40,8 @@
     colmena = {
       url = "github:zhaofengli/colmena";
       inputs = {
+        flake-compat.follows = "flake-compat";
+        flake-utils.follows = "flake-utils";
         nixpkgs.follows = "nixpkgs";
         stable.follows = "nixpkgs";
       };
@@ -46,7 +52,10 @@
     };
     gomod2nix = {
       url = "github:nix-community/gomod2nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
   };
 }
