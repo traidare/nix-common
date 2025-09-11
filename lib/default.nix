@@ -27,5 +27,7 @@ in {
         default = null;
         inherit description;
       };
+
+    packaging = import ./packaging.nix {inherit lib;};
   };
 }
