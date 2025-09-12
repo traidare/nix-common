@@ -11,7 +11,7 @@
 
       Defaults timestamp_timeout=30
       Defaults lecture=never
-      Defaults passprompt="[31m Sudo: Password for '%p@%h', running as '%U:[0m' "
+      Defaults passprompt="[31m Sudo: Password for '%p@%h', running as '%U':[0m "
     '';
   };
 

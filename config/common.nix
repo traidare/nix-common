@@ -25,9 +25,9 @@
       alsa.enable = true;
     };
 
-    logind = {
-      killUserProcesses = lib.mkDefault true;
-      lidSwitch = lib.mkDefault "ignore";
+    logind.settings.Login = {
+      KillUserProcesses = lib.mkDefault true;
+      HandleLidSwitch = lib.mkDefault "ignore";
     };
 
     xserver.displayManager.lightdm.enable = lib.mkForce false;
