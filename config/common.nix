@@ -51,6 +51,8 @@
   networking.hostName = lib.mkDefault "host";
   environment.etc."machine-id".text = "b08dfa6083e7567a1921a715000001fb"; # Whonix ID
 
+  networking.nftables.enable = lib.mkDefault true;
+
   boot.loader = {
     timeout = lib.mkDefault 1;
     grub = {
