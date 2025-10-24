@@ -68,9 +68,13 @@
     mkNixpkgs = system:
       withSystem system ({pkgs, ...}: pkgs);
 
-    mkNixos = system: extraModules:
+    mkNixos = system: name: extraModules:
       inputs.nixpkgs.lib.nixosSystem {
-        specialArgs = cfg.mkSpecialArgs system;
+        specialArgs =
+          (cfg.mkSpecialArgs system)
+          // {
+            hostName = name;
+          };
         pkgs = mkNixpkgs system;
         modules = cfg.commonModules ++ extraModules;
       };
@@ -79,7 +83,7 @@
       flake.nixosConfigurations =
         lib.mapAttrs (
           name: hostCfg:
-            mkNixos hostCfg.system hostCfg.modules
+            mkNixos hostCfg.system name hostCfg.modules
         )
         cfg.hosts;
 
