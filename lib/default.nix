@@ -28,6 +28,9 @@ in {
         inherit description;
       };
 
+    mkNameFromPath = path:
+      builtins.replaceStrings ["/"] ["-"] (lib.removePrefix "/" path);
+
     packaging = import ./packaging.nix {inherit lib;};
   };
 }
