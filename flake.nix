@@ -5,10 +5,10 @@
         systems = ["x86_64-linux" "aarch64-linux"];
         imports = [
           ./flake-modules/staged-packages.nix
-          ./lib
           ./packages
         ];
 
+        flake.lib = import ./lib {inherit (inputs.nixpkgs) lib;};
         flake.flakeModules = config.flake.lib.dirToAttrsWithDefault ./flake-modules;
         flake.nixosConfig = config.flake.lib.dirToAttrsWithDefault ./config;
         flake.nixosModules = config.flake.lib.dirToAttrsWithDefault ./nixos-modules;

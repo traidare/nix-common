@@ -1,12 +1,11 @@
 {
-  config,
   flake-parts-lib,
   inputs,
   lib,
   ...
 }: let
-  inherit (lib) types mkOption;
-  inherit (config.flake.lib.packaging) discoverWrapperModules discoverPackages;
+  flakeLib = import ../lib {inherit lib;};
+  inherit (flakeLib.packaging) discoverWrapperModules discoverPackages;
 
   handlePackages = packages: callPackage: defaultPath:
     builtins.mapAttrs (name: pkgConfig:
@@ -22,7 +21,7 @@
         pkg = callPackage path (pkgConfig.args);
       in
         if pkgConfig ? versionGate && pkgConfig.versionGate != null
-        then config.flake.lib.versionGate pkg pkgConfig.versionGate
+        then flakeLib.versionGate pkg pkgConfig.versionGate
         else pkg)
     packages;
 
@@ -85,23 +84,23 @@
   buildAllStages = stages: basePkgs:
     lib.foldl' (acc: stage: buildStage acc stage basePkgs) {} stages;
 
-  stageType = types.submodule {
+  stageType = lib.types.submodule {
     options = {
-      inputPackages = mkOption {
-        type = types.listOf (types.either types.attrs (types.listOf (types.oneOf [types.attrs types.str])));
+      inputPackages = lib.mkOption {
+        type = with lib.types; listOf (either attrs (listOf (oneOf [attrs str])));
         default = [];
         description = "Flake inputs to extract packages from";
       };
 
-      autoPackages = mkOption {
-        type = types.nullOr (types.submodule {
+      autoPackages = lib.mkOption {
+        type = lib.types.nullOr (lib.types.submodule {
           options = {
-            path = mkOption {
-              type = types.path;
+            path = lib.mkOption {
+              type = lib.types.path;
               description = "Path to auto-discover packages from";
             };
-            extraArgs = mkOption {
-              type = types.attrs;
+            extraArgs = lib.mkOption {
+              type = lib.types.attrs;
               default = {};
               description = "Extra arguments to pass to callPackage";
             };
@@ -111,23 +110,23 @@
         description = "Auto-discover packages from filesystem";
       };
 
-      packages = mkOption {
-        type = types.attrsOf (types.oneOf [
-          types.package
-          (types.submodule {
+      packages = lib.mkOption {
+        type = lib.types.attrsOf (lib.types.oneOf [
+          lib.types.package
+          (lib.types.submodule {
             options = {
-              path = mkOption {
-                type = types.nullOr types.path;
+              path = lib.mkOption {
+                type = lib.types.nullOr lib.types.path;
                 default = null;
                 description = "Path to package definition";
               };
-              args = mkOption {
-                type = types.attrs;
+              args = lib.mkOption {
+                type = lib.types.attrs;
                 default = {};
                 description = "Extra arguments to pass to callPackage";
               };
-              versionGate = mkOption {
-                type = types.nullOr types.package;
+              versionGate = lib.mkOption {
+                type = lib.types.nullOr lib.types.package;
                 default = null;
                 description = "Package to use for version gating";
               };
@@ -138,21 +137,21 @@
         description = "Manually defined packages";
       };
 
-      wrapperManager = mkOption {
-        type = types.nullOr (types.submodule {
+      wrapperManager = lib.mkOption {
+        type = lib.types.nullOr (lib.types.submodule {
           options = {
-            moduleDir = mkOption {
-              type = types.nullOr types.path;
+            moduleDir = lib.mkOption {
+              type = lib.types.nullOr lib.types.path;
               default = null;
               description = "Directory containing wrapper manager modules";
             };
-            modules = mkOption {
-              type = types.listOf types.path;
+            modules = lib.mkOption {
+              type = lib.types.listOf lib.types.path;
               default = [];
               description = "Additional wrapper manager modules";
             };
-            specialArgs = mkOption {
-              type = types.attrs;
+            specialArgs = lib.mkOption {
+              type = lib.types.attrs;
               default = {};
               description = "Special arguments for wrapper manager";
             };
@@ -174,16 +173,16 @@ in {
   in {
     options.stagedPackages = lib.mkOption {
       default = {};
-      type = types.submodule {
+      type = lib.types.submodule {
         options = {
-          stages = mkOption {
-            type = types.listOf stageType;
+          stages = lib.mkOption {
+            type = lib.types.listOf stageType;
             default = [];
             description = "List of package building stages";
           };
 
-          pkgs = mkOption {
-            type = types.raw;
+          pkgs = lib.mkOption {
+            type = lib.types.raw;
             default = pkgs;
             description = "Base package set to build upon";
           };
