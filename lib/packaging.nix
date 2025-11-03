@@ -1,4 +1,4 @@
-{lib}: rec {
+{lib, ...}: rec {
   discover = path: transform:
     lib.pipe (builtins.readDir path) [
       (lib.filterAttrs (name: value: value == "directory"))

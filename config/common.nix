@@ -2,7 +2,9 @@
   config,
   lib,
   ...
-}: {
+}: let
+  hasLogindSettings = lib.versionAtLeast lib.version "25.11";
+in {
   documentation = {
     dev.enable = lib.mkDefault true;
     doc.enable = lib.mkForce false;
@@ -17,29 +19,32 @@
   time.timeZone = lib.mkOverride 999 "CET";
 
   security.rtkit.enable = config.services.pipewire.enable;
-  services = {
-    pulseaudio.enable = lib.mkForce false;
-    pipewire = {
-      enable = config.services.xserver.enable;
-      pulse.enable = true;
-      alsa.enable = true;
-    };
+  services = lib.mkMerge [
+    {
+      pulseaudio.enable = lib.mkForce false;
+      pipewire = {
+        enable = config.services.xserver.enable;
+        pulse.enable = true;
+        alsa.enable = true;
+      };
 
-    logind.settings.Login = {
-      KillUserProcesses = lib.mkDefault true;
-      HandleLidSwitch = lib.mkDefault "ignore";
-    };
+      xserver.displayManager.lightdm.enable = lib.mkForce false;
 
-    xserver.displayManager.lightdm.enable = lib.mkForce false;
+      chrony.enable = lib.mkDefault true;
 
-    chrony.enable = lib.mkDefault true;
+      dbus.implementation = lib.mkDefault "broker";
 
-    dbus.implementation = lib.mkDefault "broker";
+      userborn.enable = lib.mkDefault true;
 
-    userborn.enable = lib.mkDefault true;
-
-    openssh.settings.PasswordAuthentication = false;
-  };
+      openssh.settings.PasswordAuthentication = false;
+    }
+    (lib.optionalAttrs hasLogindSettings {
+      logind.settings.Login = {
+        KillUserProcesses = lib.mkDefault true;
+        HandleLidSwitch = lib.mkDefault "ignore";
+      };
+    })
+  ];
 
   # TODO
   #i18n.extraLocaleSettings = {
