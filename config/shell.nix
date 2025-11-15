@@ -8,6 +8,7 @@
   programs.command-not-found.enable = false;
 
   programs.fish = {
+    enable = lib.mkDefault true;
     shellAbbrs = {
       j = lib.mkDefault "journalctl";
       s = lib.mkDefault "systemctl";
