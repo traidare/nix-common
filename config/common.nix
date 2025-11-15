@@ -34,6 +34,7 @@ in {
 
       dbus.implementation = lib.mkDefault "broker";
 
+      # User & group managing
       userborn.enable = lib.mkDefault true;
 
       openssh.settings.PasswordAuthentication = false;
@@ -82,4 +83,6 @@ in {
     EDITOR = lib.mkDefault "nvim";
     VISUAL = lib.mkDefault "nvim";
   };
+
+  sops.age.keyFile = lib.mkDefault "/var/lib/sops-nix/key.txt";
 }

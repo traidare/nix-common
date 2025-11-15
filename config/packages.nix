@@ -11,6 +11,8 @@
       htop
       lr
       ripgrep
+      ripgrep-all
+      rsync
       tree
       xe
     ];
