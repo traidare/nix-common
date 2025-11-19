@@ -8,7 +8,7 @@ writeShellApplication {
 
   runtimeInputs = [
     age
-    inputs'.nix-config-helper.packages.nix-config-helper
+    inputs'.nixos-sops-bootstrap.packages.nixos-sops-bootstrap
     inputs'.nixos-anywhere.packages.nixos-anywhere
   ];
 

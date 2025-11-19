@@ -29,8 +29,8 @@
         flake-parts.follows = "flake-parts";
       };
     };
-    nix-config-helper = {
-      url = "git+https://codeberg.org/traidare/nix-config-helper.git";
+    nixos-sops-bootstrap = {
+      url = "git+https://codeberg.org/traidare/nixos-sops-bootstrap.git";
       inputs = {
         flake-parts.follows = "flake-parts";
         gomod2nix.follows = "gomod2nix";

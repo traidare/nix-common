@@ -74,7 +74,7 @@ install -d -m755 "$temp/var/lib/sops-nix"
 age-keygen -o "$temp/var/lib/sops-nix/key.txt"
 publicKey=$(age-keygen -y "$temp/var/lib/sops-nix/key.txt")
 
-nix-config-helper prepare-install --config="$SOPS_CONFIG" --host="$HOST" --public-key="$publicKey"
+nixos-sops-bootstrap -config="$SOPS_CONFIG" -host="$HOST" -public-key="$publicKey"
 
 chmod 600 "$temp/var/lib/sops-nix/key.txt"
 
