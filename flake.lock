@@ -234,10 +234,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1763584611,
-        "narHash": "sha256-6MZOkNwZqz+Boc4rFT/izleAkVx5txay3GMV4K7IafI=",
+        "lastModified": 1763588276,
+        "narHash": "sha256-KXFCnm3Rrgd6JISu70bGqqBYouXCDHV77h+RG6q7NhQ=",
         "ref": "refs/heads/main",
-        "rev": "74d132a22845254e1f0cbb55ac9569392a08e21b",
+        "rev": "800f5eeb5162eacef2f29de1b9e5bd4104fc59c4",
         "revCount": 6,
         "type": "git",
         "url": "https://codeberg.org/traidare/nixos-sops-bootstrap.git"
@@ -314,11 +314,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1763509310,
-        "narHash": "sha256-s2WzTAD3vJtPACBCZXezNUMTG/wC6SFsU9DxazB9wDI=",
+        "lastModified": 1763607916,
+        "narHash": "sha256-VefBA1JWRXM929mBAFohFUtQJLUnEwZ2vmYUNkFnSjE=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "3ee33c0ed7c5aa61b4e10484d2ebdbdc98afb03e",
+        "rev": "877bb495a6f8faf0d89fc10bd142c4b7ed2bcc0b",
         "type": "github"
       },
       "original": {
