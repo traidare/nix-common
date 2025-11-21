@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-TARGET_USER="nixos"
 HOST=""
-TARGET_IP=""
+TARGET_HOST=""
 SOPS_CONFIG="${SOPS_CONFIG:-}"
 EXTRA_ARGS=()
 
@@ -11,11 +10,8 @@ while [ $# -gt 0 ]; do
     --host=*)
       HOST="${1#*=}"
       ;;
-    --target-user=*)
-      TARGET_USER="${1#*=}"
-      ;;
-    --target-ip=*)
-      TARGET_IP="${1#*=}"
+    --target-host=*)
+      TARGET_HOST="${1#*=}"
       ;;
     --sops-config=*)
       SOPS_CONFIG="${1#*=}"
@@ -27,7 +23,7 @@ while [ $# -gt 0 ]; do
       ;;
     *)
       echo "Unknown option: $1"
-      echo "Usage: $0 --host=HOST [--target-user=TARGET_USER] --target-ip=TARGET_IP --sops-config=SOPS_CONFIG [-- EXTRA_NIXOS_ANYWHERE_ARGS...]"
+      echo "Usage: $0 --host=HOST --target-host=USER@IP --sops-config=SOPS_CONFIG [-- EXTRA_NIXOS_ANYWHERE_ARGS...]"
       exit 1
       ;;
   esac
@@ -38,12 +34,8 @@ if [ "$HOST" = "" ]; then
   echo "Error: --host is required"
   exit 1
 fi
-if [ "$TARGET_IP" = "" ]; then
-  echo "Error: --target-ip is required"
-  exit 1
-fi
-if [ "$TARGET_USER" = "" ]; then
-  echo "Error: --target-user is required"
+if [ "$TARGET_HOST" = "" ]; then
+  echo "Error: --target-host is required (format: user@ip)"
   exit 1
 fi
 if [ "$SOPS_CONFIG" = "" ]; then
@@ -80,5 +72,5 @@ chmod 600 "$temp/var/lib/sops-nix/key.txt"
 
 exec nixos-anywhere --flake .#"${HOST}" \
   --generate-hardware-config nixos-generate-config ./hosts/"$HOST"/hardware-configuration.nix \
-  --target-host "$TARGET_USER"@"$TARGET_IP" \
+  --target-host "$TARGET_HOST" \
   --extra-files "$temp" "${EXTRA_ARGS[@]}"
