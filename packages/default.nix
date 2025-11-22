@@ -27,10 +27,6 @@
       stages = [
         {
           packages = {
-            nixos-deploy = {
-              path = ./pkgs/nixos-deploy;
-              args = {inherit inputs';};
-            };
           };
         }
       ];

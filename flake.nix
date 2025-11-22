@@ -22,21 +22,6 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils";
 
-    nixos-anywhere = {
-      url = "github:nix-community/nixos-anywhere";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-parts.follows = "flake-parts";
-      };
-    };
-    nixos-sops-bootstrap = {
-      url = "git+https://codeberg.org/traidare/nixos-sops-bootstrap.git";
-      inputs = {
-        flake-parts.follows = "flake-parts";
-        gomod2nix.follows = "gomod2nix";
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
     colmena = {
       url = "github:zhaofengli/colmena";
       inputs = {
