@@ -1,7 +1,9 @@
 {
-  outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} (
-      {config, ...}: {
+  outputs = inputs: let
+    specialArgs.lib = inputs.nixpkgs.lib.extend (import ./lib/overlay.nix {inherit inputs;});
+  in
+    inputs.flake-parts.lib.mkFlake {inherit inputs specialArgs;} (
+      {lib, ...}: {
         systems = ["x86_64-linux" "aarch64-linux"];
         imports = [
           ./flake-modules/staged-packages.nix
@@ -9,9 +11,9 @@
         ];
 
         flake.lib = import ./lib {inherit (inputs.nixpkgs) lib;};
-        flake.flakeModules = config.flake.lib.dirToAttrsWithDefault ./flake-modules;
-        flake.nixosConfig = config.flake.lib.dirToAttrsWithDefault ./config;
-        flake.nixosModules = config.flake.lib.dirToAttrsWithDefault ./nixos-modules;
+        flake.flakeModules = lib.p.dirToAttrsWithDefault ./flake-modules;
+        flake.nixosConfig = lib.p.dirToAttrsWithDefault ./config;
+        flake.nixosModules = lib.p.dirToAttrsWithDefault ./nixos-modules;
       }
     );
 
