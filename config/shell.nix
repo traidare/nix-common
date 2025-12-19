@@ -9,6 +9,12 @@
 
   programs.fish = {
     enable = lib.mkDefault true;
+    shellInit = ''
+      set -U fish_greeting
+    '';
+    shellAliases = {
+      hdel = "history delete";
+    };
     shellAbbrs = {
       j = lib.mkDefault "journalctl";
       s = lib.mkDefault "systemctl";

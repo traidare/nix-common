@@ -7,10 +7,12 @@
         "flakes"
         "pipe-operators"
       ];
+
       use-xdg-base-directories = lib.mkDefault true;
-      allowed-users = lib.mkDefault ["@wheel" "root"];
+      allowed-users = lib.mkDefault ["@wheel"];
     };
   };
+
   programs.nh = {
     enable = true;
     clean = {
