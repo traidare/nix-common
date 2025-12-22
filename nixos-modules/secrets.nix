@@ -15,10 +15,10 @@ in {
 
   config = lib.mkIf (cfg.directory != null) {
     sops.secrets = lib.mapAttrs' (name: _:
-      lib.nameValuePair (lib.removeSuffix ".${lib.last (lib.splitString "." name)}" name)
-      {
+      lib.nameValuePair name {
         sopsFile = "${cfg.directory}/${name}";
         format = lib.mkDefault "binary";
+        key = lib.mkDefault "";
       })
     (builtins.readDir cfg.directory);
 
