@@ -6,6 +6,7 @@
         "nix-command"
         "flakes"
         "pipe-operators"
+        "dynamic-derivations"
       ];
 
       use-xdg-base-directories = lib.mkDefault true;

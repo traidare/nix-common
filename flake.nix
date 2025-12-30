@@ -10,10 +10,20 @@
           ./packages
         ];
 
+        perSystem = {pkgs, ...}: {
+          devShells.default = pkgs.mkShell {
+            packages = [];
+          };
+        };
+
         flake.lib = import ./lib {inherit (inputs.nixpkgs) lib;};
         flake.flakeModules = lib.p.dirToAttrsWithDefault ./flake-modules;
         flake.nixosConfig = lib.p.dirToAttrsWithDefault ./config;
         flake.nixosModules = lib.p.dirToAttrsWithDefault ./nixos-modules;
+        flake.templates.go-app = {
+          path = ./templates/go-app;
+          description = "Go application template using gomod2nix for deterministic builds";
+        };
       }
     );
 
