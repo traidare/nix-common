@@ -64,6 +64,8 @@ in {
     };
   };
 
+  hardware.enableRedistributableFirmware = lib.mkDefault true;
+
   programs = {
     less.envVariables.LESS = "-j10 -i -A -R";
     vim = {
