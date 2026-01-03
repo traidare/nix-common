@@ -8,23 +8,43 @@
 in {
   options.p.secrets = {
     directory = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
+      type = with lib.types; nullOr (either path (listOf path));
       default = null;
+      description = ''
+        Directories containing secret files.
+        Each file will be automatically configured as a sops secret.
+        If multiple directories contain files with the same name, later directories take precedence.
+      '';
     };
   };
 
-  config = lib.mkIf (cfg.directory != null) {
-    sops.secrets = lib.mapAttrs' (name: _:
-      lib.nameValuePair name {
-        sopsFile = "${cfg.directory}/${name}";
-        format = lib.mkDefault "binary";
-        key = lib.mkDefault "";
-      })
-    (builtins.readDir cfg.directory);
+  config = lib.mkIf (cfg.directory != null) (let
+    # Normalize to always get a list
+    directories =
+      if builtins.isList cfg.directory
+      then cfg.directory
+      else [cfg.directory];
+
+    # Read all directories and merge them
+    allSecrets =
+      lib.foldl' (
+        acc: dir:
+          acc
+          // (lib.mapAttrs' (name: _:
+            lib.nameValuePair name {
+              sopsFile = "${dir}/${name}";
+              format = lib.mkDefault "binary";
+              key = lib.mkDefault "";
+            })
+          (builtins.readDir dir))
+      ) {}
+      directories;
+  in {
+    sops.secrets = allSecrets;
 
     # To get proper error messages about missing secrets a dummy secret file is needed that is always present
     sops.defaultSopsFile = lib.mkIf config.sops.validateSopsFiles (
-      lib.mkDefault (builtins.toString (pkgs.writeText "dummy.yaml" ""))
+      lib.mkDefault (toString (pkgs.writeText "dummy.yaml" ""))
     );
-  };
+  });
 }
