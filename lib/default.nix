@@ -38,5 +38,14 @@
   mkNameFromPath = path:
     builtins.replaceStrings ["/"] ["-"] (lib.removePrefix "/" path);
 
+  # Escape as required by: https://www.freedesktop.org/software/systemd/man/systemd.unit.html
+  escapeUnitName = name:
+    lib.concatMapStrings (s:
+      if lib.isList s
+      then "-"
+      else s) (
+      builtins.split "[^a-zA-Z0-9_.\\-]+" name
+    );
+
   packaging = import ./packaging.nix {inherit lib;};
 }
