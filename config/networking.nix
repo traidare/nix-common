@@ -47,10 +47,19 @@ lib.mkMerge [
   }
 
   # systemd-resolved
-  {
-    services.resolved.fallbackDns = [
-      "9.9.9.9"
-      "2620:fe::fe"
-    ];
-  }
+  (
+    if lib.versionOlder lib.trivial.release "26"
+    then {
+      services.resolved.fallbackDns = [
+        "9.9.9.9"
+        "2620:fe::fe"
+      ];
+    }
+    else {
+      services.resolved.settings.Resolve.FallbackDNS = [
+        "9.9.9.9"
+        "2620:fe::fe"
+      ];
+    }
+  )
 ]

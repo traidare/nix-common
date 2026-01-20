@@ -38,6 +38,8 @@ in {
       userborn.enable = lib.mkDefault true;
 
       openssh.settings.PasswordAuthentication = false;
+
+      gnome.gnome-keyring.enable = lib.mkOverride 950 false;
     }
     (lib.optionalAttrs hasLogindSettings {
       logind.settings.Login = {
