@@ -5,7 +5,6 @@
   ...
 }: let
   flakeLib = import ../lib {inherit lib;};
-  inherit (flakeLib.packaging) discoverWrapperModules discoverPackages;
 
   handlePackages = packages: callPackage: defaultPath:
     builtins.mapAttrs (name: pkgConfig:
@@ -21,7 +20,7 @@
         pkg = callPackage path (pkgConfig.args);
       in
         if pkgConfig ? versionGate && pkgConfig.versionGate != null
-        then flakeLib.versionGate pkg pkgConfig.versionGate
+        then flakeLib.packaging.versionGate pkg pkgConfig.versionGate
         else pkg)
     packages;
 
@@ -48,16 +47,6 @@
     ) {}
     inputList;
 
-  handleWrapperManager = {
-    moduleDir ? null,
-    modules ? [],
-    specialArgs ? {},
-  }: pkgs:
-    (inputs.wrapper-manager.lib {
-      modules = (discoverWrapperModules moduleDir) ++ modules;
-      inherit pkgs specialArgs;
-    }).config.build.packages;
-
   buildStage = prevPackages: stageConfig: basePkgs: let
     currentPkgs = basePkgs // prevPackages;
     callPackage = lib.callPackageWith currentPkgs;
@@ -68,18 +57,14 @@
 
     autoPkgs =
       lib.optionalAttrs (stageConfig ? autoPackages && stageConfig.autoPackages != null)
-      (discoverPackages (stageConfig.autoPackages // {inherit callPackage;}));
+      (flakeLib.packaging.discoverPackages (stageConfig.autoPackages // {inherit callPackage;}));
 
     discoverPath = stageConfig.autoPackages.path or null;
     manualPkgs =
       lib.optionalAttrs (stageConfig ? packages)
       (handlePackages stageConfig.packages callPackage discoverPath);
-
-    wrapperPkgs =
-      lib.optionalAttrs (stageConfig ? wrapperManager && stageConfig.wrapperManager != null)
-      (handleWrapperManager stageConfig.wrapperManager currentPkgs);
   in
-    prevPackages // inputPkgs // autoPkgs // manualPkgs // wrapperPkgs;
+    prevPackages // inputPkgs // autoPkgs // manualPkgs;
 
   buildAllStages = stages: basePkgs:
     lib.foldl' (acc: stage: buildStage acc stage basePkgs) {} stages;
@@ -135,30 +120,6 @@
         ]);
         default = {};
         description = "Manually defined packages";
-      };
-
-      wrapperManager = lib.mkOption {
-        type = lib.types.nullOr (lib.types.submodule {
-          options = {
-            moduleDir = lib.mkOption {
-              type = lib.types.nullOr lib.types.path;
-              default = null;
-              description = "Directory containing wrapper manager modules";
-            };
-            modules = lib.mkOption {
-              type = lib.types.listOf lib.types.path;
-              default = [];
-              description = "Additional wrapper manager modules";
-            };
-            specialArgs = lib.mkOption {
-              type = lib.types.attrs;
-              default = {};
-              description = "Special arguments for wrapper manager";
-            };
-          };
-        });
-        default = null;
-        description = "Wrapper manager configuration";
       };
     };
   };

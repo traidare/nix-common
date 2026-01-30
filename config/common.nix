@@ -55,14 +55,14 @@ in {
   #};
 
   boot.loader = {
-    timeout = lib.mkDefault 1;
+    timeout = lib.mkDefault 0;
     grub = {
       enable = lib.mkDefault false;
       configurationLimit = lib.mkOverride 1001 15;
     };
     systemd-boot = {
-      editor = lib.mkDefault false;
       configurationLimit = lib.mkOverride 1001 15;
+      editor = lib.mkDefault false;
     };
   };
 
