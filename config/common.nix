@@ -22,11 +22,6 @@ in {
   services = lib.mkMerge [
     {
       pulseaudio.enable = lib.mkForce false;
-      pipewire = {
-        enable = config.services.xserver.enable;
-        pulse.enable = true;
-        alsa.enable = true;
-      };
 
       xserver.displayManager.lightdm.enable = lib.mkForce false;
 
