@@ -11,7 +11,8 @@
   colmenaSubmodule = lib.types.nullOr (lib.types.submodule {
     options = {
       targetHost = lib.mkOption {
-        type = lib.types.str;
+        type = lib.types.nullOr lib.types.str;
+        default = null;
         description = "The target host for Colmena deployment";
       };
       targetUser = lib.mkOption {
@@ -105,13 +106,16 @@ in {
     mkPkgs = system:
       withSystem system ({pkgs, ...}: pkgs);
 
+    # Generate specialArgs for a given system and hostName
+    mkSpecialArgsFor = system: hostName:
+      (cfg.mkSpecialArgs system)
+      // {
+        inherit hostName;
+      };
+
     mkNixos = system: name: extraModules:
       inputs.nixpkgs.lib.nixosSystem {
-        specialArgs =
-          (cfg.mkSpecialArgs system)
-          // {
-            hostName = name;
-          };
+        specialArgs = mkSpecialArgsFor system name;
         pkgs = mkPkgs system;
         modules = cfg.commonModules ++ extraModules;
       };
@@ -147,12 +151,22 @@ in {
           (lib.optionalAttrs (hostCfg.colmena != null) {
             ${hostCfg.name} =
               hostCfg.colmena
-              // {targetHost = hostCfg.colmena.targetHost or hostCfg.name;};
+              // {
+                targetHost =
+                  if hostCfg.colmena.targetHost != null
+                  then hostCfg.colmena.targetHost
+                  else hostCfg.name;
+              };
           })
           // (lib.optionalAttrs (hostCfg.vm != null && hostCfg.vm.colmena != null) {
             ${hostCfg.vm.name} =
               hostCfg.vm.colmena
-              // {targetHost = hostCfg.vm.colmena.targetHost or hostCfg.vm.name;};
+              // {
+                targetHost =
+                  if hostCfg.vm.colmena.targetHost != null
+                  then hostCfg.vm.colmena.targetHost
+                  else hostCfg.vm.name;
+              };
           })))
       (lib.foldl' lib.mergeAttrs {})
     ];
@@ -165,18 +179,19 @@ in {
         {
           meta = {
             nixpkgs = mkPkgs cfg.system;
-            specialArgs =
-              cfg.mkSpecialArgs cfg.system
-              // {imports = cfg.commonModules;};
+            specialArgs = cfg.mkSpecialArgs cfg.system;
             allowApplyAll = false;
           };
         }
-        // (builtins.mapAttrs (name: colmenaCfg: {
+        // (builtins.mapAttrs (name: colmenaCfg: let
+            hostSystem = self.nixosConfigurations.${name}.pkgs.system;
+          in {
             imports =
               (self.nixosConfigurations.${name})._module.args.modules
               ++ [
                 {
                   deployment = colmenaCfg;
+                  _module.args = mkSpecialArgsFor hostSystem name;
                 }
               ];
           })
