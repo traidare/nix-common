@@ -19,8 +19,8 @@
 
   # Recursively converts a directory of NixOS modules into a nested attribute set.
   # Each .nix file becomes a leaf attribute (its path).
-  # Each subdirectory becomes an attribute set that is itself a valid NixOS module
-  # (containing `imports = [ ... ]` of all its children), while also exposing each
+  # Each subdirectory becomes a functor attribute set that can be used directly as
+  # a NixOS module (importing all children via __functor), while also exposing each
   # child as a named attribute for selective imports.
   #
   # Example: given this directory tree:
@@ -32,21 +32,26 @@
   #
   # recursiveDirToModules ./nixos-modules yields:
   #   {
-  #     default = { imports = [ <some_name module> ./some_other_module.nix ]; };
+  #     default = { imports = [ <some_name functor> ./some_other_module.nix ]; };
   #     some_other_module = ./some_other_module.nix;
-  #     some_name = {
-  #       imports = [ ./some_module_0.nix ./some_module_1.nix ];
+  #     some_name = <functor>{
   #       some_module_0 = ./some_module_0.nix;
   #       some_module_1 = ./some_module_1.nix;
   #     };
   #   }
   #
-  # Importing `some_name` applies both some_module_0 and some_module_1.
-  # Importing `some_name.some_module_0` applies only that single module.
+  # Usage:
+  #   imports = [ nixosModules.some_name ];              # imports both modules
+  #   imports = [ nixosModules.some_name.some_module_0 ]; # imports only one
+  #
+  # The functor works because builtins.isFunction returns true for attrsets with
+  # __functor, so the NixOS module system treats them as function modules.
+  #
+  # Note: avoid placing default.nix or __functor.nix inside module directories,
+  # as these names conflict with synthesized attributes.
   recursiveDirToModules = dir: let
     entries = builtins.readDir dir;
 
-    # Process a single directory entry into a name-value pair
     processEntry = name: type: let
       path = dir + "/${name}";
       attrName = lib.removeSuffix ".nix" name;
@@ -56,16 +61,10 @@
         name = attrName;
         value = let
           children = recursiveDirToModules path;
-          # Collect all importable values: paths for files, the attrset itself for subdirs
-          childImports =
-            lib.mapAttrsToList (
-              _: v:
-                if builtins.isPath v
-                then v
-                else v # subdirectory attrsets are already valid NixOS modules
-            ) (removeAttrs children ["default"]);
+          childrenExposed = removeAttrs children ["default"];
+          childImports = builtins.attrValues childrenExposed;
         in
-          {imports = childImports;} // (removeAttrs children ["default"]);
+          {__functor = _self: _args: {imports = childImports;};} // childrenExposed;
       }
       else if lib.hasSuffix ".nix" name
       then {
@@ -77,7 +76,6 @@
     processed = lib.filter (x: x != null) (lib.mapAttrsToList processEntry entries);
     modules = lib.listToAttrs processed;
 
-    # The top-level default imports everything (directories as modules, files as paths)
     default = {
       imports = builtins.attrValues (removeAttrs modules ["default"]);
     };
