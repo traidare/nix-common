@@ -75,21 +75,37 @@
   # Options per package:
   #   - passUpstream: bool - pass the upstream package as an argument to callPackage
   #   - trackedPkg: prev -> pkg - function to get upstream version for version gating
+  # Version-gated packages go into pkgs at the top level (e.g. pkgs.freetube).
+  # Un-gated local overrides are also stashed under pkgs.p.localPackages,
+  # so consumers can export them as flake packages (preserving passthru.updateScript etc.).
   # Example:
   #   mkLocalPackagesOverlay ./pkgs {
   #     calibre.passUpstream = true;
   #     freetube = { passUpstream = true; trackedPkg = p: p.stable.freetube; };
   #   }
   mkLocalPackagesOverlay = path: packages: final: prev: let
-    buildPkg = name: let
+    localNames = builtins.attrNames (builtins.readDir path);
+
+    buildLocal = name: let
       cfg = packages.${name} or {};
-      base = final.callPackage (path + "/${name}") (
+    in
+      final.callPackage (path + "/${name}") (
         lib.optionalAttrs (cfg.passUpstream or false) {${name} = prev.${name};}
       );
+
+    localPkgs = lib.genAttrs localNames buildLocal;
+
+    gatedPkgs = lib.mapAttrs (name: base: let
+      cfg = packages.${name} or {};
     in
       if cfg ? trackedPkg
       then versionGate base (cfg.trackedPkg prev)
-      else base;
+      else base
+    ) localPkgs;
   in
-    lib.genAttrs (builtins.attrNames (builtins.readDir path)) buildPkg;
+    gatedPkgs // {
+      p = (prev.p or {}) // {
+        localPackages = localPkgs;
+      };
+    };
 }
