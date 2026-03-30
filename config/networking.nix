@@ -14,7 +14,7 @@ in
     {
       networking.usePredictableInterfaceNames = lib.mkDefault false;
 
-      networking.hostName = lib.mkDefault "host";
+      networking.hostName = lib.mkOverride 1400 "host"; # Lower prio than lib.mkDefault
       environment.etc."machine-id".text = "b08dfa6083e7567a1921a715000001fb"; # Whonix ID
 
       networking.nftables.enable = lib.mkDefault true;
