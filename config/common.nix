@@ -63,18 +63,5 @@ in {
 
   hardware.enableRedistributableFirmware = lib.mkDefault true;
 
-  programs = {
-    less.envVariables.LESS = "-j10 -i -A -R";
-    vim = {
-      enable = lib.mkForce false;
-      defaultEditor = lib.mkForce false;
-    };
-  };
-
-  environment.sessionVariables = {
-    EDITOR = lib.mkDefault "nvim";
-    VISUAL = lib.mkDefault "nvim";
-  };
-
   sops.age.keyFile = lib.mkDefault "/var/lib/sops-nix/key.txt";
 }

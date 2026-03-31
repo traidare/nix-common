@@ -1,0 +1,112 @@
+--- a/src/nnn.h
++++ b/src/nnn.h
+@@ -173,11 +173,12 @@ static struct key bindings[] = {
+ 	{ '@',            SEL_CDBEGIN },
+ 	/* Last visited dir */
+ 	{ '-',            SEL_CDLAST },
++	{ CONTROL('o'),            SEL_CDLAST },
+ 	/* Go to / */
+-	{ '`',            SEL_CDROOT },
++	//{ '`',            SEL_CDROOT },
+ 	/* Leader key */
+ 	{ 'b',            SEL_BMOPEN },
+-	{ CONTROL('_'),   SEL_BMOPEN },
++	{ '`',            SEL_BMOPEN },
+ 	/* Connect to server over SSHFS */
+ 	{ 'c',            SEL_REMOTE },
+ 	/* Cycle contexts in forward direction */
+@@ -196,7 +197,7 @@ static struct key bindings[] = {
+ 	{ '8',            SEL_CTX8 },
+ #endif
+ 	/* Mark a path to visit later */
+-	{ ',',            SEL_MARK },
++	{ 'm',            SEL_MARK },
+ 	/* Create a bookmark */
+ 	{ 'B',            SEL_BMARK },
+ 	/* Filter */
+@@ -206,7 +207,7 @@ static struct key bindings[] = {
+ 	/* Toggle hide .dot files */
+ 	{ '.',            SEL_HIDDEN },
+ 	/* Detailed listing */
+-	{ 'd',            SEL_DETAIL },
++	{ 'F',            SEL_DETAIL },
+ 	/* File details */
+ 	{ 'f',            SEL_STATS },
+ 	{ CONTROL('F'),   SEL_STATS },
+@@ -223,7 +224,7 @@ static struct key bindings[] = {
+ 	{ ' ',            SEL_SEL },
+ 	{ '+',            SEL_SEL },
+ 	/* Toggle select multiple files */
+-	{ 'm',            SEL_SELMUL },
++	{ 'v',            SEL_SELMUL },
+ 	/* Select all files in current dir */
+ 	{ 'a',            SEL_SELALL },
+ 	/* Invert selection in current dir */
+@@ -232,28 +233,22 @@ static struct key bindings[] = {
+ 	{ 'E',            SEL_SELEDIT },
+ 	/* Copy from selection buffer */
+ 	{ 'p',            SEL_CP },
+-	{ CONTROL('P'),   SEL_CP },
+ 	/* Move from selection buffer */
+-	{ 'v',            SEL_MV },
+-	{ CONTROL('V'),   SEL_MV },
++	{ CONTROL('P'),   SEL_MV },
+ 	/* Copy/move from selection buffer and rename */
+ 	{ 'w',            SEL_CPMVAS },
+-	{ CONTROL('W'),   SEL_CPMVAS },
+ 	/* Delete from selection buffer */
+ 	{ 'x',            SEL_TRASH },
+ 	{ CONTROL('X'),   SEL_TRASH },
+ 	{ 'X',            SEL_RM_RF },
+ 	/* Open in a custom application */
+-	{ 'o',            SEL_OPENWITH },
+-	{ CONTROL('O'),   SEL_OPENWITH },
++	{ 'O',            SEL_OPENWITH },
+ 	/* Create a new file */
+ 	{ 'n',            SEL_NEW },
+ 	/* Show rename prompt */
+-	{ CONTROL('R'),   SEL_RENAME },
++	{ 'R',            SEL_RENAME },
+ 	/* Rename contents of current dir */
+ 	{ 'r',            SEL_RENAMEMUL },
+-	/* Disconnect a SSHFS mount point */
+-	{ 'u',            SEL_UMOUNT },
+ 	/* Show help */
+ 	{ '?',            SEL_HELP },
+ 	/* Toggle auto-advance on file open */
+@@ -263,10 +258,10 @@ static struct key bindings[] = {
+ 	/* Run a plugin */
+ 	{ ';',            SEL_PLUGIN },
+ 	/* Show total size of listed selection */
++	{ 's',            SEL_SELSIZE },
+ 	{ 'S',            SEL_SELSIZE },
+ 	/* Run command */
+-	{ '!',            SEL_SHELL },
+-	{ CONTROL(']'),   SEL_SHELL },
++	{ CONTROL('S'),   SEL_SHELL },
+ 	/* Launcher */
+ 	{ '=',            SEL_LAUNCH },
+ 	/* Show command prompt */
+@@ -274,19 +269,18 @@ static struct key bindings[] = {
+ 	/* Lock screen */
+ 	{ '0',            SEL_LOCK },
+ 	/* Manage sessions */
+-	{ 's',            SEL_SESSIONS },
++	//{ CONTROL('S'),   SEL_SESSIONS },
+ 	/* Export list */
+ 	{ '>',            SEL_EXPORT },
+ 	/* Set time type */
+ 	{ 'T',            SEL_TIMETYPE },
+ 	/* Quit a context */
+-	{ 'q',            SEL_QUITCTX },
++	{ 'd',            SEL_QUITCTX },
++	{ CONTROL('W'),   SEL_QUITCTX },
+ 	/* Change dir on quit */
+ 	{ CONTROL('G'),   SEL_QUITCD },
+ 	/* Quit */
+ 	{ CONTROL('Q'),   SEL_QUIT },
+-	/* Quit with an error code */
+-	{ 'Q',            SEL_QUITERR },
+ #ifndef NOMOUSE
+ 	{ KEY_MOUSE,      SEL_CLICK },
+ #endif

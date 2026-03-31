@@ -5,8 +5,6 @@
     l = lib.mkForce "ls -lhA";
   };
 
-  programs.command-not-found.enable = false;
-
   programs.fish = {
     enable = lib.mkDefault true;
     shellInit = ''
@@ -23,4 +21,17 @@
     };
   };
   programs.zoxide.enable = lib.mkDefault true;
+
+  programs.vim = {
+    enable = lib.mkForce false;
+    defaultEditor = lib.mkForce false;
+  };
+  environment.sessionVariables = {
+    EDITOR = lib.mkDefault "nvim";
+    VISUAL = lib.mkDefault "nvim";
+  };
+
+  programs.less.envVariables.LESS = "-j10 -i -A -R";
+
+  programs.command-not-found.enable = false;
 }
