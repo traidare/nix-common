@@ -3,6 +3,7 @@ system: let
   XDG_CONFIG_HOME = "$HOME/.config";
   XDG_DATA_HOME = "$HOME/.local/share";
   XDG_DESKTOP_DIR = "$HOME";
+  XDG_DOWNLOAD_DIR="$HOME/Downloads";
   XDG_MUSIC_DIR = "$HOME/Music";
   XDG_PICTURES_DIR = "$HOME/Downloads";
   XDG_PUBLICSHARE_DIR = "$HOME";
@@ -64,6 +65,7 @@ in {
       XDG_CONFIG_HOME
       XDG_DATA_HOME
       XDG_DESKTOP_DIR
+      XDG_DOWNLOAD_DIR
       XDG_MUSIC_DIR
       XDG_PICTURES_DIR
       XDG_PUBLICSHARE_DIR
