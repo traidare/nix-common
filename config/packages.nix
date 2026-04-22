@@ -8,13 +8,6 @@
     systemPackages = with pkgs; [
       curl
       dash
-      htop
-      lr
-      ripgrep
-      ripgrep-all
-      rsync
-      tree
-      xe
     ];
   };
 

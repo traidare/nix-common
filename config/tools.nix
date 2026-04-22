@@ -1,4 +1,17 @@
-{lib, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
+  environment.systemPackages = with pkgs; [
+    lr
+    p.wrappers.btop
+    ripgrep
+    ripgrep-all
+    rsync
+    tree
+    xe
+  ];
   environment.shellAliases = {
     ls = lib.mkForce "ls -F --sort=extension";
     ll = lib.mkForce "ls -lh";

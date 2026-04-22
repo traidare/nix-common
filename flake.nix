@@ -8,6 +8,7 @@
         imports = [
           ./flake-modules/staged-packages.nix
           ./packages
+          inputs.nix-wrapper-modules.flakeModules.default
         ];
 
         perSystem = {pkgs, ...}: {
@@ -33,6 +34,11 @@
     flake-compat.url = "github:edolstra/flake-compat";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils";
+
+    nix-wrapper-modules = {
+      url = "github:BirdeeHub/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     colmena = {
       url = "github:zhaofengli/colmena";

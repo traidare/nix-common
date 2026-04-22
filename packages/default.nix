@@ -5,6 +5,7 @@
   ...
 }: {
   flake.overlays.pkgs-lib = import ./pkgs-lib;
+  flake.wrappers = lib.p.packaging.discoverModules ./wrappers;
 
   perSystem = {
     inputs',
@@ -22,11 +23,28 @@
       nnn.passUpstream = true;
     };
 
+    overlayWrappers = final: prev: {
+      p =
+        prev.p or {}
+        // {
+          wrappers =
+            lib.mapAttrs (
+              _: module:
+                (inputs.nix-wrapper-modules.lib.evalModules {
+                  modules = [{pkgs = final;} module];
+                  specialArgs = {inherit inputs lib;};
+                }).config.wrapper
+            )
+            config.flake.wrapperModules;
+        };
+    };
+
     pkgs = import inputs.nixpkgs {
       inherit system;
       overlays = [
         overlayLibPkgs
         overlayLocalPackages
+        overlayWrappers
       ];
     };
   in {
