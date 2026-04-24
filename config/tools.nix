@@ -27,7 +27,11 @@
       hdel = "history delete";
     };
     shellAbbrs = {
-      j = lib.mkDefault "journalctl";
+      jo = lib.mkDefault "journalctl";
+      jc = lib.mkDefault "journalctl";
+      uj = lib.mkDefault "journalctl --user";
+      ujo = lib.mkDefault "journalctl --user";
+      ujc = lib.mkDefault "journalctl --user";
       s = lib.mkDefault "systemctl";
       us = lib.mkDefault "systemctl --user";
       v = lib.mkDefault "nvim";
