@@ -15,14 +15,14 @@
   discoverModules = path:
     discover path (builtins.mapAttrs (name: _: import (path + "/${name}")));
 
-  # Returns `newPkg` if it's newer than `upstreamPkg`, otherwise returns `upstreamPkg`
+  # Returns `newPkg` if it's the same version or newer than `upstreamPkg`, otherwise returns `upstreamPkg`
   versionGate = newPkg: upstreamPkg: let
     newVersion = lib.getVersion newPkg;
     upstreamVersion = lib.getVersion upstreamPkg;
   in
-    if builtins.compareVersions newVersion upstreamVersion > 0
+    if builtins.compareVersions newVersion upstreamVersion >= 0
     then newPkg
-    else lib.warn "Package ${lib.getName newPkg} reached version >=${newVersion} on upstream - upstream is now used" upstreamPkg;
+    else lib.warn "Package ${lib.getName newPkg} surpassed local version ${newVersion} on upstream - upstream is now used" upstreamPkg;
 
   # Returns a list of all executable names in a package's bin/ directory (requires IFD)
   exeNames = pkg: builtins.attrNames (builtins.readDir "${pkg}/bin");
@@ -71,35 +71,41 @@
       lib.listToAttrs
     ];
 
-  # Create an overlay for locally-defined packages with optional configuration
-  # Options per package:
-  #   - passUpstream: bool - pass the upstream package as an argument to callPackage
-  #   - trackedPkg: prev -> pkg - function to get upstream version for version gating
+  # Create an overlay for locally-defined packages with optional configuration.
+  # Each package can specify `upstream = prev: pkg` — a function returning the
+  # corresponding upstream derivation. When set, the upstream is both passed to
+  # callPackage as `{ ${name} = upstreamPkg; }` and used as the versionGate target.
   # Version-gated packages go into pkgs at the top level (e.g. pkgs.freetube).
   # Un-gated local overrides are also stashed under pkgs.p.localPackages,
   # so consumers can export them as flake packages (preserving passthru.updateScript etc.).
   # Example:
   #   mkLocalPackagesOverlay ./pkgs {
-  #     calibre.passUpstream = true;
-  #     freetube = { passUpstream = true; trackedPkg = p: p.stable.freetube; };
+  #     calibre.upstream = p: p.calibre;
+  #     freetube.upstream = p: p.stable.freetube;
   #   }
   mkLocalPackagesOverlay = path: packages: final: prev: let
     localNames = builtins.attrNames (builtins.readDir path);
 
+    getUpstream = name:
+      let upstream = (packages.${name} or {}).upstream or null;
+      in if upstream != null then upstream prev else null;
+
     buildLocal = name: let
-      cfg = packages.${name} or {};
+      upstreamPkg = getUpstream name;
+      fn = import (path + "/${name}");
     in
       final.callPackage (path + "/${name}") (
-        lib.optionalAttrs (cfg.passUpstream or false) {${name} = prev.${name};}
+        lib.optionalAttrs
+          (upstreamPkg != null && builtins.isFunction fn && (builtins.functionArgs fn) ? ${name})
+          {${name} = upstreamPkg;}
       );
 
     localPkgs = lib.genAttrs localNames buildLocal;
 
     gatedPkgs = lib.mapAttrs (name: base: let
-      cfg = packages.${name} or {};
+      upstreamPkg = getUpstream name;
     in
-      if cfg ? trackedPkg
-      then versionGate base (cfg.trackedPkg prev)
+      if upstreamPkg != null then versionGate base upstreamPkg
       else base
     ) localPkgs;
   in

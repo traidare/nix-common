@@ -20,7 +20,7 @@
     };
 
     overlayLocalPackages = lib.p.packaging.mkLocalPackagesOverlay ./pkgs {
-      nnn.passUpstream = true;
+      nnn.upstream = p: p.nnn;
     };
 
     overlayWrappers = final: prev: {
