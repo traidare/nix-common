@@ -1,17 +1,9 @@
-# Flake module that generates NixOS modules from wrapperModules
+# Generate NixOS modules from wrappers
 {
   inputs,
   config,
   ...
-}: let
-  wlib = inputs.nix-wrapper-modules.lib;
-
-  installMods =
-    builtins.mapAttrs (name: value: {
-      inherit name value;
-      __functor = wlib.mkInstallModule;
-    })
-    config.flake.wrapperModules;
-in {
-  flake.nixosWrapperModules = installMods;
+}: {
+  imports = [inputs.nix-wrapper-modules.flakeModules.default];
+  flake.nixosWrapperModules = builtins.mapAttrs (_: v: v.install) config.flake.wrappers;
 }
