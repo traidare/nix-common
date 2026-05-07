@@ -18,7 +18,6 @@ in {
 
   time.timeZone = lib.mkOverride 999 "CET";
 
-  security.rtkit.enable = config.services.pipewire.enable;
   services = lib.mkMerge [
     {
       pulseaudio.enable = lib.mkForce false;
@@ -35,6 +34,7 @@ in {
       openssh.settings.PasswordAuthentication = false;
 
       gnome.gnome-keyring.enable = lib.mkOverride 950 false;
+      gnome.gcr-ssh-agent.enable = lib.mkOverride 950 false;
     }
     (lib.optionalAttrs hasLogindSettings {
       logind.settings.Login = {
@@ -43,6 +43,9 @@ in {
       };
     })
   ];
+
+  security.pam.services.login.enableGnomeKeyring = lib.mkOverride 950 false;
+  security.rtkit.enable = config.services.pipewire.enable;
 
   # TODO
   #i18n.extraLocaleSettings = {
