@@ -9,16 +9,22 @@
   cfg = config.nixos-deploy;
 
   colmenaSubmodule = lib.types.nullOr (lib.types.submodule {
+    freeformType = lib.types.attrsOf lib.types.anything;
     options = {
       targetHost = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
         default = null;
-        description = "The target host for Colmena deployment";
+        description = "The target host for Colmena deployment. Defaults to the node name.";
       };
       targetUser = lib.mkOption {
         type = lib.types.str;
         default = "root";
         description = "The target user for Colmena deployment";
+      };
+      tags = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [];
+        description = "Additional Colmena tags. An automatic host/vm tag is always prepended.";
       };
     };
   });
@@ -39,6 +45,18 @@ in {
       type = lib.types.functionTo lib.types.attrs;
       default = system: {};
       description = "Function to generate specialArgs for all NixOS configurations";
+    };
+
+    hostTag = lib.mkOption {
+      type = lib.types.str;
+      default = "host";
+      description = "Colmena tag automatically added to every real host.";
+    };
+
+    vmTag = lib.mkOption {
+      type = lib.types.str;
+      default = "vm";
+      description = "Colmena tag automatically added to every VM variant.";
     };
 
     hosts = lib.mkOption {
@@ -156,6 +174,7 @@ in {
                   if hostCfg.colmena.targetHost != null
                   then hostCfg.colmena.targetHost
                   else hostCfg.name;
+                tags = [cfg.hostTag] ++ hostCfg.colmena.tags;
               };
           })
           // (lib.optionalAttrs (hostCfg.vm != null && hostCfg.vm.colmena != null) {
@@ -166,6 +185,7 @@ in {
                   if hostCfg.vm.colmena.targetHost != null
                   then hostCfg.vm.colmena.targetHost
                   else hostCfg.vm.name;
+                tags = [cfg.vmTag] ++ hostCfg.vm.colmena.tags;
               };
           })))
       (lib.foldl' lib.mergeAttrs {})
