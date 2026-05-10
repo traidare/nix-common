@@ -1,4 +1,6 @@
 {lib, ...}: rec {
+  capitalize = s: lib.toUpper (lib.substring 0 1 s) + lib.substring 1 (-1) s;
+
   # Converts a directory to an attrset mapping filenames (without .nix suffix) to their paths
   dirToAttrs = dir:
     lib.mapAttrs' (name: value: lib.nameValuePair (lib.removeSuffix ".nix" name) (dir + "/${name}")) (
