@@ -1,9 +1,17 @@
 # Generate NixOS modules from wrappers
 {
-  inputs,
   config,
+  inputs,
+  lib,
   ...
-}: {
+}: let
+  wlib = inputs.nix-wrapper-modules.lib;
+in {
   imports = [inputs.nix-wrapper-modules.flakeModules.default];
-  flake.nixosWrapperModules = builtins.mapAttrs (_: v: v.install) config.flake.wrappers;
+  flake.nixosWrapperModules = lib.mapAttrs (name: value:
+    wlib.getInstallModule {
+      inherit name value;
+      specialArgs = {inherit inputs lib;};
+    })
+  config.flake.wrapperModules;
 }
