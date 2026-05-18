@@ -41,6 +41,7 @@
 
     pkgs = import inputs.nixpkgs {
       inherit system;
+      config.allowUnfreePredicate = lib.p.packaging.allowUnfreeWithWarning;
       overlays = [
         overlayLibPkgs
         overlayLocalPackages
@@ -49,6 +50,7 @@
     };
   in {
     _module.args.pkgs = pkgs;
+    wrappers.pkgs = pkgs;
     packages = lib.p.packaging.filterExportablePackages pkgs.p.localPackages;
   };
 }
