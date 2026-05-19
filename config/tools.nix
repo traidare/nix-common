@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -46,6 +47,8 @@
   environment.sessionVariables = {
     EDITOR = lib.mkDefault "nvim";
     VISUAL = lib.mkDefault "nvim";
+
+    LESS = config.programs.less.envVariables.LESS;
   };
 
   programs.less.envVariables.LESS = "-j10 -i -A -R";
