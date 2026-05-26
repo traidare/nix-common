@@ -7,6 +7,12 @@
   docker = config.virtualisation.docker;
   dockerRL = config.virtualisation.docker.rootless;
   podman = config.virtualisation.podman;
+
+  autoPrune = {
+    enable = lib.mkDefault true;
+    flags = ["--all"];
+    dates = lib.mkDefault "monthly";
+  };
 in {
   environment.systemPackages = with pkgs;
     lib.optionals (docker.enable || podman.enable)
@@ -25,17 +31,17 @@ in {
     # Required for containers under podman-compose to be able to talk to each other.
     defaultNetwork.settings.dns_enabled = true;
 
-    autoPrune = {
-      enable = lib.mkDefault true;
-      flags = ["--all"];
-      dates = lib.mkDefault "monthly";
-    };
+    inherit autoPrune;
   };
 
   virtualisation.docker.rootless = {
     setSocketVariable = lib.mkDefault true;
   };
   virtualisation.docker = {
+    enableOnBoot = lib.mkDefault false;
+
+    inherit autoPrune;
+
     storageDriver = lib.mkIf (config.fileSystems ? "/" && config.fileSystems."/".fsType == "btrfs") "btrfs";
   };
 
